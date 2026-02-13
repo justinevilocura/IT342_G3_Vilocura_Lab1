@@ -1,51 +1,24 @@
-package com.example.demo.model;
+package com.example.demo.payload.request;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
-
+public class SignupRequest {
     @NotBlank
-    @Column(nullable = false, length = 50)
+    @Size(min = 3, max = 50)
     private String username;
 
     @NotBlank
+    @Size(max = 100)
     @Email
-    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
     @NotBlank
-    @Column(nullable = false, length = 255)
+    @Size(min = 6, max = 40)
     private String password;
 
-    @Column(length = 20)
     private String role;
-
-    public User() {
-    }
-
-    public User(String username, String email, String password, String role) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;

@@ -42,17 +42,16 @@ public class AuthController {
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(authentication);
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    // Role is just a string in User entity, no need for complex logic unless Roles
-    // are entities
+    
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();    
+    // Role is just a string in User entity, no need for complex logic unless Roles are entities
     String role = "USER"; // Default or fetch from userDetails if implemented
 
-    return ResponseEntity.ok(new JwtResponse(jwt,
-        userDetails.getId(),
-        userDetails.getUsername(),
-        userDetails.getEmail(),
-        role));
+    return ResponseEntity.ok(new JwtResponse(jwt, 
+                         userDetails.getId(), 
+                         userDetails.getUsername(), 
+                         userDetails.getEmail(), 
+                         role));
   }
 
   @PostMapping("/register")
@@ -70,10 +69,10 @@ public class AuthController {
     }
 
     // Create new user's account
-    User user = new User(signUpRequest.getUsername(),
-        signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()),
-        "USER"); // Default role
+    User user = new User(signUpRequest.getUsername(), 
+               signUpRequest.getEmail(),
+               encoder.encode(signUpRequest.getPassword()),
+               "USER"); // Default role
 
     userRepository.save(user);
 

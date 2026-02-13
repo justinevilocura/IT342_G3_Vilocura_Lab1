@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.security.jwt.AuthEntryPointJwt;
 import com.example.demo.security.jwt.AuthTokenFilter;
+import com.example.demo.security.services.UserDetailsServiceImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,11 +35,11 @@ public class WebSecurityConfig {
 
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-
-    authProvider.setPasswordEncoder(passwordEncoder());
-
-    return authProvider;
+      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+       
+      authProvider.setPasswordEncoder(passwordEncoder());
+   
+      return authProvider;
   }
 
   @Bean
@@ -53,13 +55,14 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
+        .cors(Customizer.withDefaults())
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/test/**").permitAll()
-            .requestMatchers("/error").permitAll()
-            .anyRequest().authenticated());
+        .authorizeHttpRequests(auth -> 
+          auth.requestMatchers("/api/auth/**").permitAll()
+              .requestMatchers("/api/test/**").permitAll()
+              .anyRequest().authenticated()
+        );
 
     http.authenticationProvider(authenticationProvider());
 
