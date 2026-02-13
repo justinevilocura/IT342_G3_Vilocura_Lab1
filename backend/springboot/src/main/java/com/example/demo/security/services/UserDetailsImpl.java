@@ -35,13 +35,14 @@ public class UserDetailsImpl implements UserDetails {
   }
 
   public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities = Collections.EMPTY_LIST; // Roles not fully implemented yet, simple string in User entity
+    List<GrantedAuthority> authorities = Collections.EMPTY_LIST; // Roles not fully implemented yet, simple string in
+                                                                 // User entity
 
     return new UserDetailsImpl(
-        user.getUser_id(), 
-        user.getUsername(), 
+        user.getUserId(),
+        user.getUsername(),
         user.getEmail(),
-        user.getPassword(), 
+        user.getPassword(),
         authorities);
   }
 
